@@ -1,0 +1,4 @@
+INSERT INTO TB_EVENT (name, description, place, start_date, end_date, start_time, end_time, email_contact) VALUES ('curso de culinária','culinária francesa','São Paulo','2020-10-03','2020-10-05','19:30','10:00', 'gabi@gmail.com' )
+INSERT INTO TB_EVENT (name, description, place, start_date, end_date, start_time, end_time, email_contact) VALUES ('curso de desenho','desenhos realistas','Campinas','2020-12-20','2020-12-22','18:00','21:30', 'luciane@hotmail.com' )
+INSERT INTO TB_EVENT (name, description, place, start_date, end_date, start_time, end_time, email_contact) VALUES ('curso de violão','acordes básicos','São Paulo','2021-03-07','2021-03-08','19:30','22:00', 'pedro@gmail.com' )
+INSERT INTO TB_EVENT (name, description, place, start_date, end_date, start_time, end_time, email_contact) VALUES ('curso de ukulele','notas e batidas','Itapetininga','2021-03-07','2021-03-09','18:30','11:00', 'ricardo@hotmail.com' )
