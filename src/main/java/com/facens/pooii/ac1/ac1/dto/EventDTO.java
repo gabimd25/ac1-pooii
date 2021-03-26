@@ -3,6 +3,8 @@ package com.facens.pooii.ac1.ac1.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.facens.pooii.ac1.ac1.entities.Event;
+
 //Não recebe o email
 public class EventDTO {
     private Long id;
@@ -75,5 +77,15 @@ public class EventDTO {
 
     public EventDTO(){
         
+    }
+    public EventDTO(Event ev){
+        this.id = ev.getId();
+        this.name = ev.getName();
+        this.description = ev.getDescription();
+        this.place = ev.getPlace();
+        this.startDate = ev.getStartDate();
+        this.endDate = ev.getEndDate();
+        this.startTime = ev.getStartTime();
+        this.endTime = ev.getEndTime(); 
     }
 }
