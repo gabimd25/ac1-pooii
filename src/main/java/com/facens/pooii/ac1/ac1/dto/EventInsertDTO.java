@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class EventInsertDTO {
+
     private String name;
     private String description;
     private String place;

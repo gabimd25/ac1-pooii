@@ -1,5 +1,7 @@
 package com.facens.pooii.ac1.ac1.services;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -24,17 +26,11 @@ public class EventService {
     @Autowired
     private EventRepository repo;
 
-    public Page<EventDTO> getEvents(PageRequest pageRequest){
-        Page<Event> list = repo.find(pageRequest);
-        //List<EventDTO> listDTO = new ArrayList<>();
-
-        /*for(Event e : list){
-            EventDTO dto = new EventDTO(e.getId(), e.getName(),e.getDescription(), e.getPlace(),
-                e.getStartDate(), e.getEndDate(), e.getStartTime(), e.getEndTime());
-            listDTO.add(dto);
-        }*/
-        //return listDTO;
-        return list.map(e -> new EventDTO(e));
+    public Page<EventDTO> getEvents(PageRequest pageRequest, String name, String place,
+            LocalDate startDate, String description){
+        
+        Page<Event> list = repo.find(pageRequest, name, place, startDate, description);
+        return list.map(e -> new EventDTO(e) );
     }
     public EventDTO getEventById(Long id){
         Optional<Event> op = repo.findById(id);
@@ -42,9 +38,16 @@ public class EventService {
         return new EventDTO(ev);
     }
     public EventDTO insert(EventInsertDTO dto){
-        Event entity = new Event(dto);
-        entity = repo.save(entity);
-        return new EventDTO(entity);
+        LocalDateTime start = dto.getStartDate().atTime(dto.getStartTime());
+        LocalDateTime end = dto.getEndDate().atTime(dto.getEndTime());
+        if(start.isAfter(end)){
+            return null;
+        }
+        else{
+            Event entity = new Event(dto);
+            entity = repo.save(entity);
+            return new EventDTO(entity);
+        }     
     }
     public void delete(Long id) {
         try{
@@ -69,5 +72,12 @@ public class EventService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found");
           }
     }
-
+    public LocalDate convertDate(String startDate){
+        LocalDate result;
+            if(startDate.isEmpty())
+            result = LocalDate.now().minusDays(1);
+            else
+            result = LocalDate.parse(startDate);
+        return result;
+    }
 }

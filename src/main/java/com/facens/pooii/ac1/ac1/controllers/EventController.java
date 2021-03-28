@@ -1,7 +1,7 @@
 package com.facens.pooii.ac1.ac1.controllers;
 
 import java.net.URI;
-
+import java.time.LocalDate;
 
 import com.facens.pooii.ac1.ac1.dto.EventDTO;
 import com.facens.pooii.ac1.ac1.dto.EventInsertDTO;
@@ -32,13 +32,18 @@ public class EventController {
 
     @GetMapping
     public ResponseEntity<Page<EventDTO>> getEvents(
-                        @RequestParam(value="page",defaultValue = "0") Integer page,
-                        @RequestParam(value="linesPerPage",defaultValue = "6") Integer linesPerPage,
+                        @RequestParam(value = "page",defaultValue = "0") Integer page,
+                        @RequestParam(value = "linesPerPage",defaultValue = "6") Integer linesPerPage,
                         @RequestParam(value = "direction", defaultValue = "ASC") String direction,
-                        @RequestParam(value = "orderBy", defaultValue = "id") String orderBy
+                        @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
+                        @RequestParam(value = "name", defaultValue = "") String name,
+                        @RequestParam(value = "place", defaultValue = "") String place,
+                        @RequestParam(value = "startDate", defaultValue = "") String startDate,
+                        @RequestParam(value = "description", defaultValue = "") String description
     ){
+        LocalDate startDate_convert = service.convertDate(startDate);
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-        Page<EventDTO> list = service.getEvents(pageRequest);
+        Page<EventDTO> list = service.getEvents(pageRequest,name,place,startDate_convert,description);
         return ResponseEntity.ok(list);
     }
 
