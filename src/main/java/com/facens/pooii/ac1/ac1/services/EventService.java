@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import com.facens.pooii.ac1.ac1.dto.EventDTO;
 import com.facens.pooii.ac1.ac1.dto.EventInsertDTO;
+import com.facens.pooii.ac1.ac1.dto.EventUpdateDTO;
 import com.facens.pooii.ac1.ac1.entities.Event;
 import com.facens.pooii.ac1.ac1.repositories.EventRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -42,7 +46,27 @@ public class EventService {
         return new EventDTO(entity);
     }
     public void delete(Long id) {
-        repo.deleteById(id);
+        try{
+            repo.deleteById(id);
+        }
+        catch(EmptyResultDataAccessException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found");
+        }
+    }
+    public EventDTO update(EventUpdateDTO eventDTO, Long id) {
+        try{
+            Event event = repo.getOne(id);
+            event.setDescription(eventDTO.getDescription());
+            event.setPlace(eventDTO.getPlace());
+            event.setStartTime(eventDTO.getStartTime());
+            event.setEndTime(eventDTO.getEndTime());
+            event.setEmailContact(eventDTO.getEmailContact());
+            event = repo.save(event);
+            return new EventDTO(event);
+          }
+          catch(EntityNotFoundException ex){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found");
+          }
     }
 
 }
