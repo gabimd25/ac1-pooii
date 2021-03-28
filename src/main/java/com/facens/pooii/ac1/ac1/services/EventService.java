@@ -41,5 +41,8 @@ public class EventService {
         entity = repo.save(entity);
         return new EventDTO(entity);
     }
+    public void delete(Long id) {
+        repo.deleteById(id);
+    }
 
 }
