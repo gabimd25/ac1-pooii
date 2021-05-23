@@ -8,6 +8,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
+import com.facens.pooii.ac1.ac1.dto.AttendInsertDTO;
+
 @Entity
 @Table(name="TB_ATTEND")
 @PrimaryKeyJoinColumn(name="BASEUSER_ID")
@@ -26,5 +28,10 @@ public class Attend extends BaseUser{
     }
     public Attend(){
 
+    }
+    public Attend(AttendInsertDTO dto) {
+        this.setName(dto.getName());
+        this.setEmailContact(dto.getEmailContact());
+        this.balance = dto.getBalance();
     }
 }
