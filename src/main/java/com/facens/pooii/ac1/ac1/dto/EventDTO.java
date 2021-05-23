@@ -10,11 +10,16 @@ public class EventDTO {
     private Long id;
     private String name;
     private String description;
-    private String place;
     private LocalDate startDate;
     private LocalDate endDate;
     private LocalTime startTime;
     private LocalTime endTime;
+    private Long amountFreeTickets;
+    private Long amountPayedTickets;
+    private Double priceTicket;
+    private Long freeTickectsSelled;
+    private Long payedTickectsSelled;
+
     public Long getId() {
         return id;
     }
@@ -32,12 +37,6 @@ public class EventDTO {
     }
     public void setDescription(String description) {
         this.description = description;
-    }
-    public String getPlace() {
-        return place;
-    }
-    public void setPlace(String place) {
-        this.place = place;
     }
     public LocalDate getStartDate() {
         return startDate;
@@ -63,12 +62,42 @@ public class EventDTO {
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
+    
+    public Long getAmountFreeTickets() {
+        return amountFreeTickets;
+    }
+    public void setAmountFreeTickets(Long amountFreeTickets) {
+        this.amountFreeTickets = amountFreeTickets;
+    }
+    public Long getAmountPayedTickets() {
+        return amountPayedTickets;
+    }
+    public void setAmountPayedTickets(Long amountPayedTickets) {
+        this.amountPayedTickets = amountPayedTickets;
+    }
+    public Double getPriceTicket() {
+        return priceTicket;
+    }
+    public void setPriceTicket(Double priceTicket) {
+        this.priceTicket = priceTicket;
+    }
+    public Long getFreeTickectsSelled() {
+        return freeTickectsSelled;
+    }
+    public void setFreeTickectsSelled(Long freeTickectsSelled) {
+        this.freeTickectsSelled = freeTickectsSelled;
+    }
+    public Long getPayedTickectsSelled() {
+        return payedTickectsSelled;
+    }
+    public void setPayedTickectsSelled(Long payedTickectsSelled) {
+        this.payedTickectsSelled = payedTickectsSelled;
+    }
     public EventDTO(Long id, String name, String description, String place, LocalDate startDate, LocalDate endDate,
             LocalTime startTime, LocalTime endTime) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.place = place;
         this.startDate = startDate;
         this.endDate = endDate;
         this.startTime = startTime;
@@ -82,7 +111,6 @@ public class EventDTO {
         this.id = ev.getId();
         this.name = ev.getName();
         this.description = ev.getDescription();
-        this.place = ev.getPlace();
         this.startDate = ev.getStartDate();
         this.endDate = ev.getEndDate();
         this.startTime = ev.getStartTime();

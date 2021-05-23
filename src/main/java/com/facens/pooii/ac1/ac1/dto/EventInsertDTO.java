@@ -7,12 +7,17 @@ public class EventInsertDTO {
 
     private String name;
     private String description;
-    private String place;
     private LocalDate startDate;
     private LocalDate endDate;
     private LocalTime startTime;
     private LocalTime endTime;
     private String emailContact;
+    private Long amountFreeTickets;
+    private Long amountPayedTickets;
+    private Double priceTicket;
+    private Long freeTickectsSelled;
+    private Long payedTickectsSelled;
+
     public String getName() {
         return name;
     }
@@ -24,12 +29,6 @@ public class EventInsertDTO {
     }
     public void setDescription(String description) {
         this.description = description;
-    }
-    public String getPlace() {
-        return place;
-    }
-    public void setPlace(String place) {
-        this.place = place;
     }
     public LocalDate getStartDate() {
         return startDate;
@@ -60,6 +59,36 @@ public class EventInsertDTO {
     }
     public void setEmailContact(String emailContact) {
         this.emailContact = emailContact;
+    }
+    public Long getAmountFreeTickets() {
+        return amountFreeTickets;
+    }
+    public void setAmountFreeTickets(Long amountFreeTickets) {
+        this.amountFreeTickets = amountFreeTickets;
+    }
+    public Long getAmountPayedTickets() {
+        return amountPayedTickets;
+    }
+    public void setAmountPayedTickets(Long amountPayedTickets) {
+        this.amountPayedTickets = amountPayedTickets;
+    }
+    public Double getPriceTicket() {
+        return priceTicket;
+    }
+    public void setPriceTicket(Double priceTicket) {
+        this.priceTicket = priceTicket;
+    }
+    public Long getFreeTickectsSelled() {
+        return freeTickectsSelled;
+    }
+    public void setFreeTickectsSelled(Long freeTickectsSelled) {
+        this.freeTickectsSelled = freeTickectsSelled;
+    }
+    public Long getPayedTickectsSelled() {
+        return payedTickectsSelled;
+    }
+    public void setPayedTickectsSelled(Long payedTickectsSelled) {
+        this.payedTickectsSelled = payedTickectsSelled;
     }
 
     

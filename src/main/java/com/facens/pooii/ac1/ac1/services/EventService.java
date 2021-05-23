@@ -26,30 +26,33 @@ public class EventService {
     @Autowired
     private EventRepository repo;
 
-    public Page<EventDTO> getEvents(PageRequest pageRequest, String name, String place,
+    public Page<EventDTO> getEvents(PageRequest pageRequest, String name, Double priceTicket,
             LocalDate startDate, String description){
-        
-        Page<Event> list = repo.find(pageRequest, name, place, startDate, description);
+        Page<Event> list = repo.find(pageRequest, name, priceTicket, startDate, description);
         return list.map(e -> new EventDTO(e) );
     }
+
     public EventDTO getEventById(Long id){
         Optional<Event> op = repo.findById(id);
         Event ev = op.orElseThrow( ()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"Event not found"));
         return new EventDTO(ev);
     }
+
     public EventDTO insert(EventInsertDTO dto){
-        LocalDateTime start = dto.getStartDate().atTime(dto.getStartTime());
-        LocalDateTime end = dto.getEndDate().atTime(dto.getEndTime());
-        if(start.isAfter(end)){
-            return null;
-        }
-        else{
+        //VALIDAÇÃO DAS HORAS
+        //VALIDÇÃO INFORMAÇÕES - NAME, EMAILCONTACT
+        //TEM QUE COLOCAR ID DO ADMIN
+        if (dto.getStartDate().compareTo(dto.getEndDate()) > 0) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "The end date should be bigger than the start date!");
+        } else {
             Event entity = new Event(dto);
             entity = repo.save(entity);
             return new EventDTO(entity);
         }     
     }
     public void delete(Long id) {
+        //Um evento que já tenha ingressos vendidos não poderá ser removido
         try{
             repo.deleteById(id);
         }
@@ -57,27 +60,33 @@ public class EventService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found");
         }
     }
-    public EventDTO update(EventUpdateDTO eventDTO, Long id) {
-        try{
-            Event event = repo.getOne(id);
-            event.setDescription(eventDTO.getDescription());
-            event.setPlace(eventDTO.getPlace());
-            event.setStartTime(eventDTO.getStartTime());
-            event.setEndTime(eventDTO.getEndTime());
-            event.setEmailContact(eventDTO.getEmailContact());
-            event = repo.save(event);
-            return new EventDTO(event);
-          }
-          catch(EntityNotFoundException ex){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found");
-          }
-    }
-    public LocalDate convertDate(String startDate){
-        LocalDate result;
-            if(startDate.isEmpty())
-            result = LocalDate.now().minusDays(1);
-            else
-            result = LocalDate.parse(startDate);
-        return result;
+    public EventDTO update(EventUpdateDTO eventUpdateDTO, Long id) {
+        //VALIDAÇÃO PARA DATA NÃO SER ANTES DO DIA ATUAL
+        //VALIDAÇÃO DAS HORAS
+        //Não será possível alterar as informações do evento após a sua realização
+        if (eventUpdateDTO.getStartDate().compareTo(eventUpdateDTO.getEndDate()) > 0) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "The end date should be bigger than the start date!");
+        } 
+        else
+        {
+            try {
+                Event entity = repo.getOne(id);
+                entity.setStartDate(eventUpdateDTO.getStartDate());
+                entity.setEndDate(eventUpdateDTO.getEndDate());
+                entity.setStartTime(eventUpdateDTO.getStartTime());
+                entity.setEndTime(eventUpdateDTO.getEndTime());
+                entity.setEmailContact(eventUpdateDTO.getEmailContact());
+                entity.setAmountFreeTickets(eventUpdateDTO.getAmountFreeTickets());
+                entity.setAmountPayedTickets(eventUpdateDTO.getAmountPayedTickets());
+                entity.setPriceTicket(eventUpdateDTO.getPriceTicket());
+                entity = repo.save(entity);
+                return new EventDTO(entity);
+    
+            } catch (EntityNotFoundException e) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found");
+            }
+
+        }
     }
 }

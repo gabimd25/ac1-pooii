@@ -37,14 +37,15 @@ public class EventController {
                         @RequestParam(value = "direction", defaultValue = "ASC") String direction,
                         @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
                         @RequestParam(value = "name", defaultValue = "") String name,
-                        @RequestParam(value = "place", defaultValue = "") String place,
-                        @RequestParam(value = "startDate", defaultValue = "") String startDate,
+                        @RequestParam(value = "priceTicket", defaultValue = "") Double priceTicket,
+                        @RequestParam(value = "startDate", defaultValue = "2020-01-01") LocalDate startDate,
                         @RequestParam(value = "description", defaultValue = "") String description
     ){
-        LocalDate startDate_convert = service.convertDate(startDate);
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-        Page<EventDTO> list = service.getEvents(pageRequest,name,place,startDate_convert,description);
-        return ResponseEntity.ok(list);
+
+        Page<EventDTO> list = service.getEvents(pageRequest, name.trim(), priceTicket, startDate, description.trim());
+
+        return ResponseEntity.ok().body(list);
     }
 
     @GetMapping("/{id}")
