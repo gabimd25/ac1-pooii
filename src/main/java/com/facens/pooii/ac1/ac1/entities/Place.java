@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.facens.pooii.ac1.ac1.dto.PlaceInsertDTO;
+
 @Entity
 @Table(name="TB_PLACE")
 public class Place implements Serializable{
@@ -24,7 +26,7 @@ public class Place implements Serializable{
     private Long id;
     
     private String name;
-    private String adress;
+    private String address;
 
     @ManyToMany
     @JoinTable(
@@ -50,12 +52,12 @@ public class Place implements Serializable{
         this.name = name;
     }
 
-    public String getAdress() {
-        return adress;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAdress(String adress) {
-        this.adress = adress;
+    public void setAddress(String adress) {
+        this.address = adress;
     }
 
     public List<Event> getEvents() {
@@ -93,6 +95,11 @@ public class Place implements Serializable{
 
     public Place(){
 
+    }
+
+    public Place(PlaceInsertDTO dto) {
+        this.address = dto.getAddress();
+        this.name = dto.getName();
     }
 
     

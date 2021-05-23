@@ -8,7 +8,7 @@ import com.facens.pooii.ac1.ac1.entities.Event;
 public class PlaceInsertDTO {
 
     private String name;
-    private String adress;
+    private String address;
     private List<Event> events = new ArrayList<>();
 
     public String getName() {
@@ -19,12 +19,12 @@ public class PlaceInsertDTO {
         this.name = name;
     }
 
-    public String getAdress() {
-        return adress;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAdress(String adress) {
-        this.adress = adress;
+    public void setAddress(String adress) {
+        this.address = adress;
     }
 
     public List<Event> getEvents() {

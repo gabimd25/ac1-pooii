@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.facens.pooii.ac1.ac1.entities.Event;
+import com.facens.pooii.ac1.ac1.entities.Place;
 
 public class PlaceDTO {
 
     private Long id;
     private String name;
-    private String adress;
+    private String address;
     private List<Event> events = new ArrayList<>();
 
     public Long getId() {
@@ -28,12 +29,12 @@ public class PlaceDTO {
         this.name = name;
     }
 
-    public String getAdress() {
-        return adress;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAdress(String adress) {
-        this.adress = adress;
+    public void setAddress(String adress) {
+        this.address = adress;
     }
 
     public List<Event> getEvents() {
@@ -46,6 +47,12 @@ public class PlaceDTO {
 
     public PlaceDTO(){
 
+    }
+
+    public PlaceDTO(Place p) {
+        this.id = p.getId();
+        this.address = p.getAddress();
+        this.name = p.getName();
     }
 
     

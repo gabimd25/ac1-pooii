@@ -8,6 +8,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
+import com.facens.pooii.ac1.ac1.dto.AdminInsertDTO;
+
 @Entity
 @Table(name="TB_ADMIN")
 @PrimaryKeyJoinColumn(name="BASEUSER_ID")
@@ -27,6 +29,11 @@ public class Admin extends BaseUser{
 
     public Admin(){
         
+    }
+    public Admin(AdminInsertDTO dto) {
+        this.setName(dto.getName());
+        this.setEmailContact(dto.getEmailContact());
+        this.phoneNumber = dto.getPhoneNumber();
     }
 
 }
