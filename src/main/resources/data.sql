@@ -14,6 +14,14 @@ INSERT INTO TB_BASEUSER(name, email_contact) VALUES ('Jessy Silva', 'Jessy@hotma
 INSERT INTO TB_BASEUSER(name, email_contact) VALUES ('Maurício Gabriel', 'mgg@hotmail.com')
 INSERT INTO TB_BASEUSER(name, email_contact) VALUES ('Julia Pires', 'Jpeg@hotmail.com')
 
+INSERT INTO TB_ADMIN(baseuser_id, phone_number) VALUES (1,'996543234')
+INSERT INTO TB_ADMIN(baseuser_id, phone_number) VALUES (2,'990549234')
+INSERT INTO TB_ADMIN(baseuser_id, phone_number) VALUES (3,'996553234')
+
+INSERT INTO TB_ATTEND(baseuser_id, balance) VALUES (4, 20.00)
+INSERT INTO TB_ATTEND(baseuser_id, balance) VALUES (5, 40.00)
+INSERT INTO TB_ATTEND(baseuser_id, balance) VALUES (6, 30.00)
+
 INSERT INTO TB_TICKET (price) VALUES (15.00)
 INSERT INTO TB_TICKET (price) VALUES (20.00)
 INSERT INTO TB_TICKET (price) VALUES (10.00)
