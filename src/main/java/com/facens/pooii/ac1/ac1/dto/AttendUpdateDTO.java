@@ -7,16 +7,9 @@ import com.facens.pooii.ac1.ac1.entities.Ticket;
 
 public class AttendUpdateDTO extends BaseUserUpdateDTO{
     
-    private Double balance;
     private List<Ticket> tickets = new ArrayList<>();
     
 
-    public Double getBalance() {
-        return balance;
-    }
-    public void setBalance(Double balance) {
-        this.balance = balance;
-    }
     public List<Ticket> getTickets() {
         return tickets;
     }

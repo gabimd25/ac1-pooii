@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,12 +38,11 @@ public class EventController {
                         @RequestParam(value = "direction", defaultValue = "ASC") String direction,
                         @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
                         @RequestParam(value = "name", defaultValue = "") String name,
-                        @RequestParam(value = "priceTicket", defaultValue = "") Double priceTicket,
-                        @RequestParam(value = "startDate", defaultValue = "2020-01-01") LocalDate startDate,
-                        @RequestParam(value = "description", defaultValue = "") String description
+                        @RequestParam(value = "priceTicket", defaultValue = "0") Double priceTicket,
+                        @RequestParam(value = "description", defaultValue = "") String description,
+                        @RequestParam(value = "startDate", defaultValue = "2020-01-01") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate               
     ){
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-
         Page<EventDTO> list = service.getEvents(pageRequest, name.trim(), priceTicket, startDate, description.trim());
 
         return ResponseEntity.ok().body(list);

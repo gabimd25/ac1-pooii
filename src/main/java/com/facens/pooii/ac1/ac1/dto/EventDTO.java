@@ -115,5 +115,10 @@ public class EventDTO {
         this.endDate = ev.getEndDate();
         this.startTime = ev.getStartTime();
         this.endTime = ev.getEndTime(); 
+        this.amountFreeTickets = ev.getAmountFreeTickets();
+        this.amountPayedTickets = ev.getAmountPayedTickets();
+        this.priceTicket = ev.getPriceTicket();
+        this.freeTickectsSelled = ev.getFreeTickectsSelled();
+        this.payedTickectsSelled = ev.getPayedTickectsSelled();
     }
 }

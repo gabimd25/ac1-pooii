@@ -3,10 +3,15 @@ package com.facens.pooii.ac1.ac1.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class EventUpdateDTO {
 
+    @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate startDate;
+    @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate endDate;
+    
     private LocalTime startTime;
     private LocalTime endTime;
     private String emailContact;

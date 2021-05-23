@@ -36,10 +36,21 @@ public class AttendService {
     }
 
     public AttendDTO insert(AttendInsertDTO dto){
-        //VALIDAÇÃO -NENHUM PODE SER NULL  
-        Attend entity = new Attend(dto);
-        entity = repository.save(entity);
-        return new AttendDTO(entity);
+        //VALIDAÇÃO - NAME E EMAIL NÃO PODE SER NULL 
+        if (dto.getName() == null || dto.getName().length() < 4 || dto.getName().length() > 50) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "The name should be bigger than 4 letters and shorter than 50!");
+        } 
+        else if(dto.getEmailContact() == null || dto.getEmailContact().length() < 10){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "The email contact should be at least 10 characters!");
+        }
+        else{
+            Attend entity = new Attend(dto);
+            entity = repository.save(entity);
+            return new AttendDTO(entity);
+        } 
+        
     }
     public void delete(Long id) {
         //Verificar qual deve ser a validação
@@ -54,7 +65,6 @@ public class AttendService {
         //VALIDAÇÃO -NENHUM PODE SER NULL
         Attend entity = repository.getOne(id);
         entity.setEmailContact(UpdateDTO.getEmailContact());
-        entity.setBalance(UpdateDTO.getBalance());
         entity = repository.save(entity);
         return new AttendDTO(entity);
     }

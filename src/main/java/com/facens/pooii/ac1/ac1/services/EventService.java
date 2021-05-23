@@ -38,17 +38,39 @@ public class EventService {
     }
 
     public EventDTO insert(EventInsertDTO dto){
+        LocalDate date = LocalDate.now();
         //VALIDAÇÃO DAS HORAS
-        //VALIDÇÃO INFORMAÇÕES - NAME, EMAILCONTACT
-        //TEM QUE COLOCAR ID DO ADMIN
         if (dto.getStartDate().compareTo(dto.getEndDate()) > 0) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-                    "The end date should be bigger than the start date!");
-        } else {
+            "The end date should be bigger than the start date!");
+        }
+        else if (dto.getStartDate().compareTo(dto.getEndDate()) == 0 && dto.getStartTime().compareTo(dto.getEndTime()) >= 0 ){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "The end time should be bigger than the start time at the same day!");
+        }
+        else if(dto.getEndDate().compareTo(date) < 0){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "The end date should be bigger or equal to today!");
+        }
+        //VALIDAÇÃO INFORMAÇÕES - NAME, EMAILCONTACT
+        else if (dto.getName() == null || dto.getName().length() < 4 || dto.getName().length() > 50) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "The name should be bigger than 4 letters and shorter than 50!");
+        } 
+        else if(dto.getEmailContact() == null || dto.getEmailContact().length() < 10){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "The email contact should be at least 10 characters!");
+        }
+         //TEM QUE COLOCAR ID DO ADMIN
+        // if(){
+        //     throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+        //     "For each event there should be one administrator!");
+        // }
+        else {
             Event entity = new Event(dto);
             entity = repository.save(entity);
             return new EventDTO(entity);
-        }     
+        }
     }
     public void delete(Long id) {
         //Um evento que já tenha ingressos vendidos não poderá ser removido
@@ -60,13 +82,26 @@ public class EventService {
         }
     }
     public EventDTO update(EventUpdateDTO eventUpdateDTO, Long id) {
+        LocalDate date = LocalDate.now();
         //VALIDAÇÃO PARA DATA NÃO SER ANTES DO DIA ATUAL
-        //VALIDAÇÃO DAS HORAS
-        //Não será possível alterar as informações do evento após a sua realização
         if (eventUpdateDTO.getStartDate().compareTo(eventUpdateDTO.getEndDate()) > 0) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                     "The end date should be bigger than the start date!");
         } 
+        //VALIDAÇÃO DAS HORAS
+        else if (eventUpdateDTO.getStartDate().compareTo(eventUpdateDTO.getEndDate()) == 0 && eventUpdateDTO.getStartTime().compareTo(eventUpdateDTO.getEndTime()) >= 0) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "The end time should be bigger than the start time at the same day!");
+        } 
+        //Não será possível alterar as informações do evento após a sua realização
+        else if(eventUpdateDTO.getEndDate().compareTo(date) < 0){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "The end date should be bigger or equal to today!");
+        }
+        else if(eventUpdateDTO.getEmailContact() == null || eventUpdateDTO.getEmailContact().length() < 10){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "The email contact should be at least 10 characters!");
+        }
         else
         {
             try {

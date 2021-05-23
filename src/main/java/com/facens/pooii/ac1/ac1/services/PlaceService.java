@@ -37,9 +37,19 @@ public class PlaceService{
 
     public PlaceDTO insert(PlaceInsertDTO dto){
         //VALIDAÇÃO name e address não pode ser null
-        Place entity = new Place(dto);
+        if (dto.getName() == null || dto.getName().length() < 4 || dto.getName().length() > 50) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "The name should be bigger than 4 letters and shorter than 50!");
+        } 
+        else if(dto.getAddress() == null || dto.getAddress().length() < 7){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "The address should be at least 10 characters!");
+        }
+        else{
+            Place entity = new Place(dto);
             entity = repository.save(entity);
-            return new PlaceDTO(entity);   
+            return new PlaceDTO(entity);
+        }
     }
     public void delete(Long id) {
         //Um local não poderá ser removido se ele já foi usado por um evento
@@ -51,7 +61,12 @@ public class PlaceService{
         }
     }
     public PlaceDTO update(PlaceUpdateDTO eventUpdateDTO, Long id) {  
-        try {
+        if (eventUpdateDTO.getName() == null || eventUpdateDTO.getName().length() < 4 || eventUpdateDTO.getName().length() > 50) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "The name should be bigger than 4 letters and shorter than 50!");
+        }
+        else{
+            try {
                 Place entity = repository.getOne(id);
                 entity.setName(eventUpdateDTO.getName());
                 entity = repository.save(entity);
@@ -60,5 +75,6 @@ public class PlaceService{
             } catch (EntityNotFoundException e) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Place not found");
             }
+        }        
     }
 }
