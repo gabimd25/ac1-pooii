@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.facens.pooii.ac1.ac1.dto.EventInsertDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="TB_EVENT")
@@ -50,6 +51,7 @@ public class Event implements Serializable{
     private List<Place> places = new ArrayList<>();
 
     @OneToMany(mappedBy = "event")
+    @JsonIgnore
     private List<Ticket> tickets = new ArrayList<>();
 
     @ManyToOne
@@ -133,6 +135,24 @@ public class Event implements Serializable{
     }
     public void setPayedTickectsSelled(Long payedTickectsSelled) {
         this.payedTickectsSelled = payedTickectsSelled;
+    }
+    public Admin getAdmin() {
+        return admin;
+    }
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+    }
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
+    }
+    public List<Place> getPlaces() {
+        return places;
+    }
+    public void setPlaces(List<Place> places) {
+        this.places = places;
     }
     @Override
     public int hashCode() {

@@ -31,7 +31,7 @@ public class AttendService {
 
     public AttendDTO getAttendById(Long id){
         Optional<Attend> op = repository.findById(id);
-        Attend attend = op.orElseThrow( ()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"Attend not found"));
+        Attend attend = op.orElseThrow( ()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Attend not found"));
         return new AttendDTO(attend);
     }
 
@@ -47,6 +47,7 @@ public class AttendService {
         }
         else{
             Attend entity = new Attend(dto);
+            entity.setBalance(0.00);
             entity = repository.save(entity);
             return new AttendDTO(entity);
         } 
@@ -62,10 +63,21 @@ public class AttendService {
         }
     }
     public AttendDTO update(AttendUpdateDTO UpdateDTO, Long id) {
-        //VALIDAÇÃO -NENHUM PODE SER NULL
-        Attend entity = repository.getOne(id);
-        entity.setEmailContact(UpdateDTO.getEmailContact());
-        entity = repository.save(entity);
-        return new AttendDTO(entity);
+        //VALIDAÇÃO -EMAIL PODE SER NULL
+        if(UpdateDTO.getEmailContact() == null || UpdateDTO.getEmailContact().length() < 10){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "The email contact should be at least 10 characters!");
+        }
+        else{
+            try{
+                Attend entity = repository.getOne(id);
+                entity.setEmailContact(UpdateDTO.getEmailContact());
+                entity = repository.save(entity);
+                return new AttendDTO(entity);
+            } catch (EntityNotFoundException e) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Attend not found");
+            }
+            
+        }
     }
 }

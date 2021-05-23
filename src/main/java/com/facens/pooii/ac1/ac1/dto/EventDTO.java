@@ -2,8 +2,12 @@ package com.facens.pooii.ac1.ac1.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.facens.pooii.ac1.ac1.entities.Admin;
 import com.facens.pooii.ac1.ac1.entities.Event;
+import com.facens.pooii.ac1.ac1.entities.Place;
 
 //Não recebe o email
 public class EventDTO {
@@ -19,6 +23,9 @@ public class EventDTO {
     private Double priceTicket;
     private Long freeTickectsSelled;
     private Long payedTickectsSelled;
+
+    private List<Place> places = new ArrayList<>();
+    private Admin admin;
 
     public Long getId() {
         return id;
@@ -93,17 +100,19 @@ public class EventDTO {
     public void setPayedTickectsSelled(Long payedTickectsSelled) {
         this.payedTickectsSelled = payedTickectsSelled;
     }
-    public EventDTO(Long id, String name, String description, String place, LocalDate startDate, LocalDate endDate,
-            LocalTime startTime, LocalTime endTime) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.startTime = startTime;
-        this.endTime = endTime;
+    public List<Place> getPlaces() {
+        return places;
     }
-
+    public void setPlaces(List<Place> places) {
+        this.places = places;
+    }
+    public Admin getAdmin() {
+        return admin;
+    }
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+    }
+    
     public EventDTO(){
         
     }
@@ -120,5 +129,7 @@ public class EventDTO {
         this.priceTicket = ev.getPriceTicket();
         this.freeTickectsSelled = ev.getFreeTickectsSelled();
         this.payedTickectsSelled = ev.getPayedTickectsSelled();
+        this.places = ev.getPlaces();
+        this.admin = ev.getAdmin();
     }
 }

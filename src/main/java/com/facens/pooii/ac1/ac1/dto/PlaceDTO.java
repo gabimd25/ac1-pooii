@@ -53,6 +53,7 @@ public class PlaceDTO {
         this.id = p.getId();
         this.address = p.getAddress();
         this.name = p.getName();
+        this.events = p.getEvents();
     }
 
     

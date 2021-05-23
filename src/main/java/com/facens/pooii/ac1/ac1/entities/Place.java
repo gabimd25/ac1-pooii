@@ -14,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import com.facens.pooii.ac1.ac1.dto.PlaceInsertDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="TB_PLACE")
@@ -34,6 +35,7 @@ public class Place implements Serializable{
         joinColumns =  @JoinColumn(name="PLACE_ID"),
         inverseJoinColumns = @JoinColumn(name="EVENT_ID")
     )
+    @JsonIgnore
     private List<Event> events = new ArrayList<>();
 
     public Long getId() {

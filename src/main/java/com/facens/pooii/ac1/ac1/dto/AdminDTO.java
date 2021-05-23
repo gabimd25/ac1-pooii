@@ -9,6 +9,7 @@ import com.facens.pooii.ac1.ac1.entities.Event;
 public class AdminDTO extends BaseUserDTO{
     
     private String phoneNumber;
+
     private List<Event> events = new ArrayList<>();
     
     public String getPhoneNumber() {
@@ -32,5 +33,6 @@ public class AdminDTO extends BaseUserDTO{
         this.setName(ad.getName());
         this.setEmailContact(ad.getEmailContact());
         this.phoneNumber = ad.getPhoneNumber();
+        this.events = ad.getEvents();
     }
 }

@@ -24,6 +24,8 @@ public class EventInsertDTO {
     private Double priceTicket;
     private Long freeTickectsSelled;
     private Long payedTickectsSelled;
+    
+    private Long idAdmin;
 
     public String getName() {
         return name;
@@ -97,6 +99,11 @@ public class EventInsertDTO {
     public void setPayedTickectsSelled(Long payedTickectsSelled) {
         this.payedTickectsSelled = payedTickectsSelled;
     }
-
+    public Long getIdAdmin() {
+        return idAdmin;
+    }
+    public void setIdAdmin(Long idAdmin) {
+        this.idAdmin = idAdmin;
+    }
     
 }

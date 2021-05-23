@@ -36,13 +36,27 @@ public class AdminService {
     }
 
     public AdminDTO insert(AdminInsertDTO dto){
-        //VALIDAÇÃO -NENHUM PODE SER NULL  
-        Admin entity = new Admin(dto);
-        entity = repository.save(entity);
-        return new AdminDTO(entity);
+        //VALIDAÇÃO -NENHUM PODE SER NULL
+        if(dto.getName() == null || dto.getName().length() < 4 || dto.getName().length() > 50) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "The name should be bigger than 4 letters and shorter than 50!");
+        } 
+        else if(dto.getEmailContact() == null || dto.getEmailContact().length() < 10){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "The email contact should be at least 10 characters!");
+        }
+        else if(dto.getPhoneNumber() == null || dto.getPhoneNumber().length() < 8 ){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "The phone number should be at least 8 characters!");
+        }
+        else{
+            Admin entity = new Admin(dto);
+            entity = repository.save(entity);
+            return new AdminDTO(entity);
+        }
+        
     }
     public void delete(Long id) {
-        //Verificar qual deve ser a validação
         try{
             repository.deleteById(id);
         }
@@ -51,11 +65,25 @@ public class AdminService {
         }
     }
     public AdminDTO update(AdminUpdateDTO UpdateDTO, Long id) {
-        //VALIDAÇÃO -NENHUM PODE SER NULL
-        Admin entity = repository.getOne(id);
-        entity.setEmailContact(UpdateDTO.getEmailContact());
-        entity.setPhoneNumber(UpdateDTO.getPhoneNumber());
-        entity = repository.save(entity);
-        return new AdminDTO(entity);
+        //VALIDAÇÃO -EMAIL E PHONE NUMBER NÃO PODE SER NULL
+        if(UpdateDTO.getEmailContact() == null || UpdateDTO.getEmailContact().length() < 10){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "The email contact should be at least 10 characters!");
+        }
+        else if(UpdateDTO.getPhoneNumber() == null || UpdateDTO.getPhoneNumber().length() < 8 ){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "The phone number should be at least 8 characters!");
+        }
+        else{
+            try{
+                Admin entity = repository.getOne(id);
+            entity.setEmailContact(UpdateDTO.getEmailContact());
+            entity.setPhoneNumber(UpdateDTO.getPhoneNumber());
+            entity = repository.save(entity);
+            return new AdminDTO(entity);
+            } catch (EntityNotFoundException e) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Admin not found");
+            }          
+        }        
     }
 }

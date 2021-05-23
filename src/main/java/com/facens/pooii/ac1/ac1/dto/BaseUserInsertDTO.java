@@ -1,6 +1,7 @@
 package com.facens.pooii.ac1.ac1.dto;
 
 public class BaseUserInsertDTO {
+    
     private String name;
     private String emailContact;
 

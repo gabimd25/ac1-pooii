@@ -7,14 +7,6 @@ INSERT INTO TB_PLACE (name, address) VALUES ('SorocabaClub','Rua São Bento n 12
 INSERT INTO TB_PLACE (name, address) VALUES ('VotorantimClub','Avenida 31 de Março n 1000')
 INSERT INTO TB_PLACE (name, address) VALUES ('SoroTimClub','Avenida 01 de Abril n 42')
 
-INSERT INTO TB_ADMIN(name, email_contact, phoneNumber) VALUES ('Charlies Junior', 'charles@outlook.com','996543234')
-INSERT INTO TB_ADMIN(name, email_contact, phoneNumber) VALUES ('Bia Albuquerque', 'bia12@outlook.com','990549234')
-INSERT INTO TB_ADMIN(name, email_contact, phoneNumber) VALUES ('Afonso Malta', 'affonso45@outlook.com','996553234')
-
-INSERT INTO TB_ATTEND(name, email_contact, balance) VALUES ('Jessy Silva', 'Jessy@hotmail.com', 20.00)
-INSERT INTO TB_ATTEND(name, email_contact, balance) VALUES ('Maurício Gabriel', 'mgg@hotmail.com', 40.00)
-INSERT INTO TB_ATTEND(name, email_contact, balance) VALUES ('Julia Pires', 'Jpeg@hotmail.com', 30.00)
-
 INSERT INTO TB_BASEUSER(name, email_contact) VALUES ('Charlies Junior', 'charles@outlook.com')
 INSERT INTO TB_BASEUSER(name, email_contact) VALUES ('Bia Albuquerque', 'bia12@outlook.com')
 INSERT INTO TB_BASEUSER(name, email_contact) VALUES ('Afonso Malta', 'affonso45@outlook.com')

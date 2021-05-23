@@ -8,7 +8,9 @@ import javax.persistence.EntityNotFoundException;
 import com.facens.pooii.ac1.ac1.dto.EventDTO;
 import com.facens.pooii.ac1.ac1.dto.EventInsertDTO;
 import com.facens.pooii.ac1.ac1.dto.EventUpdateDTO;
+import com.facens.pooii.ac1.ac1.entities.Admin;
 import com.facens.pooii.ac1.ac1.entities.Event;
+import com.facens.pooii.ac1.ac1.repositories.AdminRepository;
 import com.facens.pooii.ac1.ac1.repositories.EventRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class EventService {
     @Autowired
     private EventRepository repository;
 
+    @Autowired
+    private AdminRepository repositoryAdmin;
+    
     public Page<EventDTO> getEvents(PageRequest pageRequest, String name, Double priceTicket,
             LocalDate startDate, String description){
         Page<Event> list = repository.find(pageRequest, name, priceTicket, startDate, description);
@@ -61,13 +66,28 @@ public class EventService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
             "The email contact should be at least 10 characters!");
         }
-         //TEM QUE COLOCAR ID DO ADMIN
-        // if(){
-        //     throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-        //     "For each event there should be one administrator!");
-        // }
+        else if(dto.getAmountFreeTickets() == null || dto.getAmountPayedTickets() == null 
+                    || dto.getAmountFreeTickets() < 0 || dto.getAmountPayedTickets() < 0 ){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "The amount free tickets and payed tickets should be bigger or equal to 0!");
+        }
+        else if(dto.getPriceTicket() == null || dto.getPriceTicket() < 0){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "The ticket´s price should be bigger or equal to 0!");
+        }
+        //TEM QUE COLOCAR ID DO ADMIN
+        else if(dto.getIdAdmin() == null){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "The id should be a number!");
+        }        
         else {
+            Long id = dto.getIdAdmin();
+            Optional<Admin> op = repositoryAdmin.findById(id);
+            Admin admin = op.orElseThrow( ()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"Admin not found"));
+
             Event entity = new Event(dto);
+            entity.setAdmin(admin);
+
             entity = repository.save(entity);
             return new EventDTO(entity);
         }
