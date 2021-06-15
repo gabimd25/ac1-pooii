@@ -1,7 +1,8 @@
 # ac1-pooii
 PROJETO AC1 - Web Rest API com Spring Boot para cadastrar eventos - Gabriela Miranda RA 190634
 
-# ac2-poii
+# ac2-pooii
+# af-pooii
 Gabriela Miranda Domingues 190634
 Lívia Sayuri Chinem Moreno 190374
 
@@ -39,6 +40,11 @@ Event
     "idAdmin": 1
 }
 
+Ticket
+{
+    "idAttend": 6,
+    "type": "PAYED"
+}
 
 
 
