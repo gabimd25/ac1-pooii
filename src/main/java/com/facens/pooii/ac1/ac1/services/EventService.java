@@ -193,6 +193,11 @@ public class EventService {
         LocalDateTime startEvent = event.getStartDate().atTime(event.getStartTime());
         LocalDateTime endEvent = event.getEndDate().atTime(event.getEndTime());
 
+        LocalDateTime date = LocalDateTime.now();
+        if(startEvent.compareTo(date)<=0){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "This event can´t be changed");
+        }
+
         for(Event e : events){
             LocalDateTime startE = e.getStartDate().atTime(e.getStartTime());
             LocalDateTime endE = e.getEndDate().atTime(e.getEndTime());
@@ -230,15 +235,28 @@ public class EventService {
 
         Optional<Place> pl = repositoryPlace.findById(idPlace);
         Place place = pl.orElseThrow( ()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"Place not found"));
+        
+        LocalDateTime startE = event.getStartDate().atTime(event.getStartTime());
+        LocalDateTime date = LocalDateTime.now();
+        if(startE.compareTo(date)<=0){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "This event can´t be changed");
+        }
 
-        try{
+        List<Place> places = event.getPlaces();
+        Boolean pertence = false;
+        for(Place pla : places){
+            if(pla.getId()==idPlace){
+                pertence = true;
+            }
+        }
+        if(pertence == true){
             event.getPlaces().remove(place);
             place.getEvents().remove(event);
 
             event = repository.save(event);
         }
-        catch(EmptyResultDataAccessException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error, try again!");
+        else{
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Place and Event aren´t connected!");
         }
     }
     public TicketDTO insertTicket(TicketInsertDTO insertDTO, Long id){
@@ -299,13 +317,13 @@ public class EventService {
 
         Optional<Attend> at = repositoryAttend.findById(insertDTO.getIdAttend());
         Attend attend = at.orElseThrow( ()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"Attend not found"));
-        
+
         if(startE.compareTo(date)<= 0){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "This event started");
         }
 
         List<Ticket> tickets = attend.getTickets();
-        Long idTicket=null;
+        Long idTicket=0L;
         for(Ticket tic : tickets){
             if(tic.getEvent().getId()==id){
                 idTicket = tic.getId();

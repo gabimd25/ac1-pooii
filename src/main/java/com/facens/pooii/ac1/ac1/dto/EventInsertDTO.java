@@ -84,7 +84,7 @@ public class EventInsertDTO {
     }
     public void setPriceTicket(Double priceTicket) {
         this.priceTicket = priceTicket;
-    }
+    } 
     public Long getIdAdmin() {
         return idAdmin;
     }
