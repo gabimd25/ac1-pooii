@@ -10,17 +10,20 @@ Attend
         "name": "Luciano Huck",
         "emailContact": "lucianoH@gmail.com"
 }
+
 Admin
 {
         "name": "Juliene Souza",
         "phoneNumber": "32321011",
         "emailContact": "juju_souza@gmail.com"
 }
+
 Place
 {
     "name": "SorocabaFesta",
     "address": "Avenida Dom Aguirre n 73"
 }
+
 Event
 {
     "name": "curso de culinária",
@@ -33,8 +36,6 @@ Event
     "amountFreeTickets": 0,
     "amountPayedTickets": 30,
     "priceTicket": 10,
-    "freeTickectsSelled": null,
-    "payedTickectsSelled": null,
     "idAdmin": 1
 }
 
