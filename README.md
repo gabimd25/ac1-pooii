@@ -39,6 +39,11 @@ Event
     "idAdmin": 1
 }
 
+Ticket
+{
+    "idAttend": 6,
+    "type": "PAYED"
+}
 
 
 
