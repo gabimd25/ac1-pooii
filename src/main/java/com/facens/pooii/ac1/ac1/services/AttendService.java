@@ -36,6 +36,8 @@ public class AttendService {
     }
 
     public AttendDTO insert(AttendInsertDTO dto){
+        Optional<Attend> op = repository.emailExist(dto.getEmailContact());
+
         //VALIDAÇÃO - NAME E EMAIL NÃO PODE SER NULL 
         if (dto.getName() == null || dto.getName().length() < 4 || dto.getName().length() > 50) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
@@ -44,6 +46,10 @@ public class AttendService {
         else if(dto.getEmailContact() == null || dto.getEmailContact().length() < 10){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
             "The email contact should be at least 10 characters!");
+        }
+        else if(!op.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "This email have been used!");
         }
         else{
             Attend entity = new Attend(dto);

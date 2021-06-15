@@ -1,17 +1,30 @@
 package com.facens.pooii.ac1.ac1.services;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.DoubleToIntFunction;
 
 import javax.persistence.EntityNotFoundException;
 
 import com.facens.pooii.ac1.ac1.dto.EventDTO;
 import com.facens.pooii.ac1.ac1.dto.EventInsertDTO;
 import com.facens.pooii.ac1.ac1.dto.EventUpdateDTO;
+import com.facens.pooii.ac1.ac1.dto.TicketDTO;
+import com.facens.pooii.ac1.ac1.dto.TicketGetDTO;
+import com.facens.pooii.ac1.ac1.dto.TicketInsertDTO;
 import com.facens.pooii.ac1.ac1.entities.Admin;
+import com.facens.pooii.ac1.ac1.entities.Attend;
 import com.facens.pooii.ac1.ac1.entities.Event;
+import com.facens.pooii.ac1.ac1.entities.Place;
+import com.facens.pooii.ac1.ac1.entities.Ticket;
+import com.facens.pooii.ac1.ac1.entities.TicketType;
 import com.facens.pooii.ac1.ac1.repositories.AdminRepository;
+import com.facens.pooii.ac1.ac1.repositories.AttendRepository;
 import com.facens.pooii.ac1.ac1.repositories.EventRepository;
+import com.facens.pooii.ac1.ac1.repositories.PlaceRepository;
+import com.facens.pooii.ac1.ac1.repositories.TicketRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -29,6 +42,15 @@ public class EventService {
 
     @Autowired
     private AdminRepository repositoryAdmin;
+    
+    @Autowired
+    private PlaceRepository repositoryPlace;
+
+    @Autowired
+    private TicketRepository repositoryTicket;
+
+    @Autowired
+    private AttendRepository repositoryAttend;
     
     public Page<EventDTO> getEvents(PageRequest pageRequest, String name, Double priceTicket,
             LocalDate startDate, String description){
@@ -95,7 +117,16 @@ public class EventService {
     public void delete(Long id) {
         //Um evento que já tenha ingressos vendidos não poderá ser removido
         try{
-            repository.deleteById(id);
+            EventDTO event = getEventById(id);
+            Long selled;
+            selled = event.getFreeTickectsSelled() + event.getPayedTickectsSelled();
+            if(selled > 0){
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                "this event already has tickets sold");
+            }
+            else{
+               repository.deleteById(id); 
+            }            
         }
         catch(EmptyResultDataAccessException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found");
@@ -126,6 +157,12 @@ public class EventService {
         {
             try {
                 Event entity = repository.getOne(id);
+
+                if(entity.getEndDate().compareTo(date)<0){
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "this event cannot be changed because it's over!");
+                }
+
                 entity.setStartDate(eventUpdateDTO.getStartDate());
                 entity.setEndDate(eventUpdateDTO.getEndDate());
                 entity.setStartTime(eventUpdateDTO.getStartTime());
@@ -143,4 +180,178 @@ public class EventService {
 
         }
     }
+    public EventDTO addEventPlace(Long idEvent, Long idPlace) {
+        //Um evento que já tenha ingressos vendidos não poderá ser removido
+        
+        Optional<Event> ev = repository.findById(idEvent);
+        Event event = ev.orElseThrow( ()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"Event not found"));
+
+        Optional<Place> pl = repositoryPlace.findById(idPlace);
+        Place place = pl.orElseThrow( ()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"Place not found"));
+        
+        List<Event> events = place.getEvents();
+        Boolean disponivel=true;
+        LocalDateTime startEvent = event.getStartDate().atTime(event.getStartTime());
+        LocalDateTime endEvent = event.getEndDate().atTime(event.getEndTime());
+
+        for(Event e : events){
+            LocalDateTime startE = e.getStartDate().atTime(e.getStartTime());
+            LocalDateTime endE = e.getEndDate().atTime(e.getEndTime());
+            if(startEvent.isAfter(startE) && startEvent.isBefore(endE)){
+                disponivel = false;
+            }
+            else if(endEvent.isAfter(startE) && endEvent.isBefore(endE)){
+                disponivel = false;
+            }
+            else if(startEvent.isBefore(startE) && endEvent.isAfter(endE)){
+                disponivel = false;
+            }
+            else if(startEvent.isEqual(startE) || endEvent.isEqual(endE)){
+                disponivel = false;
+            }
+        }
+        if(disponivel == true){
+            event.getPlaces().add(place);
+            place.getEvents().add(event);
+            //event.addPlace(place);
+            //place.addEvent(event);
+
+            event = repository.save(event);
+            //place = repositoryPlace.save(place);
+            return new EventDTO(event);
+        }
+        else{
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Place unavailable!");
+        }
+        
+    }
+    public void removeEventPlace(Long idEvent, Long idPlace) {
+        Optional<Event> ev = repository.findById(idEvent);
+        Event event = ev.orElseThrow( ()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"Event not found"));
+
+        Optional<Place> pl = repositoryPlace.findById(idPlace);
+        Place place = pl.orElseThrow( ()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"Place not found"));
+
+        try{
+            event.getPlaces().remove(place);
+            place.getEvents().remove(event);
+
+            event = repository.save(event);
+        }
+        catch(EmptyResultDataAccessException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error, try again!");
+        }
+    }
+    public TicketDTO insertTicket(TicketInsertDTO insertDTO, Long id){
+        LocalDateTime date = LocalDateTime.now();
+
+        Optional<Event> ev = repository.findById(id);
+        Event event = ev.orElseThrow( ()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"Event not found"));
+
+        LocalDateTime endE = event.getEndDate().atTime(event.getEndTime());
+
+        if(endE.compareTo(date)<0 ){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "This event is over");
+        }
+
+        Optional<Attend> at = repositoryAttend.findById(insertDTO.getIdAttend());
+        Attend attend = at.orElseThrow( ()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"Attend not found"));
+        Ticket ticket = new Ticket(insertDTO);
+        ticket.setEvent(event);
+        ticket.setAttend(attend);
+
+        if(insertDTO.getType()==TicketType.FREE){
+            if(event.getFreeTickectsSelled()<event.getAmountFreeTickets()){
+                event.sellFreeTicket();
+                attend.addTicket(ticket);
+
+                ticket = repositoryTicket.save(ticket);
+                attend = repositoryAttend.save(attend);
+                event = repository.save(event);
+            }
+            else{
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Free Tickets unavailable");
+            }
+        }
+        else{
+            if(event.getPayedTickectsSelled()<event.getAmountPayedTickets()){
+                event.sellPayedTicket();
+                attend.addTicket(ticket);
+
+                ticket = repositoryTicket.save(ticket);
+                attend = repositoryAttend.save(attend);
+                event = repository.save(event);
+            }
+            else{
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Payed Tickets unavailable");
+            }
+        }
+
+        return new TicketDTO(ticket);
+    }
+
+    public void removeTicket(TicketInsertDTO insertDTO, Long id) {
+        LocalDateTime date = LocalDateTime.now();
+        Optional<Event> ev = repository.findById(id);
+        Event event = ev.orElseThrow( ()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"Event not found"));
+
+        LocalDateTime startE = event.getStartDate().atTime(event.getStartTime());
+
+        Optional<Attend> at = repositoryAttend.findById(insertDTO.getIdAttend());
+        Attend attend = at.orElseThrow( ()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"Attend not found"));
+        
+        if(startE.compareTo(date)<= 0){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "This event started");
+        }
+
+        List<Ticket> tickets = attend.getTickets();
+        Long idTicket=null;
+        for(Ticket tic : tickets){
+            if(tic.getEvent().getId()==id){
+                idTicket = tic.getId();
+            }
+        }
+        try{
+                Optional<Ticket> tic = repositoryTicket.findById(idTicket);
+                Ticket ticket = tic.orElseThrow( ()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"Ticket not found"));
+                
+                event.getTickets().remove(ticket);
+                attend.getTickets().remove(ticket);
+
+                if(ticket.getType()==TicketType.FREE){
+                    event.returnFreeTicket();
+                }
+                else{
+                    event.returnPayedTicket();
+                    attend.addBalance(ticket.getPrice());
+                }
+
+                repositoryTicket.delete(ticket);
+                event = repository.save(event);
+            }
+            catch(EmptyResultDataAccessException e){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error, try again!");
+            }
+        
+    }
+
+    public TicketGetDTO getTickets(Long id){
+        Optional<Event> op = repository.findById(id);
+        Event ev = op.orElseThrow( ()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"Event not found"));
+
+        TicketGetDTO dto = new TicketGetDTO(ev);
+        
+        for(Ticket ticket : ev.getTickets()){
+            if(ticket.getType() == TicketType.FREE){
+                dto.addAttendFree(ticket.getAttend());
+            }
+            else{
+                dto.addAttendPayed(ticket.getAttend());
+            }
+        }
+        return dto;
+    }
+    /*
+    VERIFICAR PORQUE OS EVENTS DO DATA.SQL NAO ESTAO SALVANDO*/
 }

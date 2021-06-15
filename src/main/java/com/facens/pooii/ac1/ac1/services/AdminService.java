@@ -37,6 +37,8 @@ public class AdminService {
 
     public AdminDTO insert(AdminInsertDTO dto){
         //VALIDAÇÃO -NENHUM PODE SER NULL
+        Optional<Admin> op = repository.emailExist(dto.getEmailContact());
+
         if(dto.getName() == null || dto.getName().length() < 4 || dto.getName().length() > 50) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
             "The name should be bigger than 4 letters and shorter than 50!");
@@ -44,6 +46,10 @@ public class AdminService {
         else if(dto.getEmailContact() == null || dto.getEmailContact().length() < 10){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
             "The email contact should be at least 10 characters!");
+        }
+        else if(!op.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "This email have been used!");
         }
         else if(dto.getPhoneNumber() == null || dto.getPhoneNumber().length() < 8 ){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
@@ -66,6 +72,8 @@ public class AdminService {
     }
     public AdminDTO update(AdminUpdateDTO UpdateDTO, Long id) {
         //VALIDAÇÃO -EMAIL E PHONE NUMBER NÃO PODE SER NULL
+        Optional<Admin> op = repository.emailExist(UpdateDTO.getEmailContact());
+
         if(UpdateDTO.getEmailContact() == null || UpdateDTO.getEmailContact().length() < 10){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
             "The email contact should be at least 10 characters!");
@@ -73,6 +81,10 @@ public class AdminService {
         else if(UpdateDTO.getPhoneNumber() == null || UpdateDTO.getPhoneNumber().length() < 8 ){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
             "The phone number should be at least 8 characters!");
+        }
+        else if(!op.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+            "This email have been used!");
         }
         else{
             try{

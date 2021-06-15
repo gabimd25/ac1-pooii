@@ -21,4 +21,5 @@ public interface EventRepository extends JpaRepository<Event, Long>{
         "(LOWER (e.description) LIKE LOWER(CONCAT('%',:description,'%')))" )
     public Page<Event> find(Pageable pageRequest, String name, Double priceTicket,
             LocalDate startDate, String description);
+
 }

@@ -33,5 +33,6 @@ public class AttendDTO extends BaseUserDTO{
         this.setName(at.getName());
         this.setEmailContact(at.getEmailContact());
         this.balance = at.getBalance();
+        this.tickets = at.getTickets();
     }
 }

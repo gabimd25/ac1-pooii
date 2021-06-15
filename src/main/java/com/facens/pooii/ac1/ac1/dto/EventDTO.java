@@ -112,7 +112,7 @@ public class EventDTO {
     public void setAdmin(Admin admin) {
         this.admin = admin;
     }
-    
+
     public EventDTO(){
         
     }

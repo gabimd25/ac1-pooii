@@ -15,4 +15,5 @@ public interface PlaceRepository extends JpaRepository<Place, Long>{
         "(LOWER(e.name) LIKE LOWER(CONCAT('%',:name,'%'))) AND " +
         "(LOWER (e.address) LIKE LOWER(CONCAT('%',:address,'%')))" )
     public Page<Place> find(Pageable pageRequest, String name, String address);
+
 }

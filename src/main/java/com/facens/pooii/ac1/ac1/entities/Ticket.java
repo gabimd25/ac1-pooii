@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.facens.pooii.ac1.ac1.dto.TicketInsertDTO;
+
 @Entity
 @Table(name="TB_TICKET")
 public class Ticket implements Serializable{
@@ -21,7 +23,8 @@ public class Ticket implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
    
-    private Instant date;
+    private Instant date = Instant.now();
+    
     private Double price;
 
     public TicketType type;
@@ -72,6 +75,15 @@ public class Ticket implements Serializable{
 
     public void setEvent(Event event) {
         this.event = event;
+        this.price = event.getPriceTicket();
+    }
+
+    public Attend getAttend() {
+        return attend;
+    }
+
+    public void setAttend(Attend attend) {
+        this.attend = attend;
     }
 
     @Override
@@ -101,5 +113,9 @@ public class Ticket implements Serializable{
 
     public Ticket(){
 
+    }
+
+    public Ticket(TicketInsertDTO dto){
+        this.type = dto.getType();
     }
 }

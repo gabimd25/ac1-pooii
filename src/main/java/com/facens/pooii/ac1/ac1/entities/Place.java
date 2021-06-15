@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,12 +30,7 @@ public class Place implements Serializable{
     private String name;
     private String address;
 
-    @ManyToMany
-    @JoinTable(
-        name="tb_event_place",
-        joinColumns =  @JoinColumn(name="PLACE_ID"),
-        inverseJoinColumns = @JoinColumn(name="EVENT_ID")
-    )
+    @ManyToMany(mappedBy="places", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Event> events = new ArrayList<>();
 
@@ -68,6 +64,9 @@ public class Place implements Serializable{
 
     public void setEvents(List<Event> events) {
         this.events = events;
+    }
+    public void addEvent(Event event){
+        this.events.add(event);
     }
 
     @Override

@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -39,14 +40,14 @@ public class Event implements Serializable{
     private Long amountFreeTickets;
     private Long amountPayedTickets;
     private Double priceTicket;
-    private Long freeTickectsSelled;
-    private Long payedTickectsSelled;
+    private Long freeTickectsSelled= 0L;
+    private Long payedTickectsSelled= 0L;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-        name="TB_PLACE_EVENT",
-        joinColumns =  @JoinColumn(name="EVENT_ID"),
-        inverseJoinColumns = @JoinColumn(name="PLACE_ID")
+        name="TB_EVENT_PLACE",
+        joinColumns =  @JoinColumn(name="PLACE_ID"),
+        inverseJoinColumns = @JoinColumn(name="EVENT_ID")
     )
     private List<Place> places = new ArrayList<>();
 
@@ -153,6 +154,24 @@ public class Event implements Serializable{
     }
     public void setPlaces(List<Place> places) {
         this.places = places;
+    }
+    public void addPlace(Place place){
+        this.places.add(place);
+    }
+    public void addTicket(Ticket ticket){
+        this.tickets.add(ticket);
+    }
+    public void sellFreeTicket(){
+        this.freeTickectsSelled += 1L;
+    }
+    public void sellPayedTicket(){
+        this.payedTickectsSelled += 1L;
+    }
+    public void returnFreeTicket(){
+        this.freeTickectsSelled -= 1L;
+    }
+    public void returnPayedTicket(){
+        this.payedTickectsSelled -= 1L;
     }
     @Override
     public int hashCode() {

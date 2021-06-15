@@ -22,8 +22,6 @@ public class EventInsertDTO {
     private Long amountFreeTickets;
     private Long amountPayedTickets;
     private Double priceTicket;
-    private Long freeTickectsSelled;
-    private Long payedTickectsSelled;
     
     private Long idAdmin;
 
@@ -86,18 +84,6 @@ public class EventInsertDTO {
     }
     public void setPriceTicket(Double priceTicket) {
         this.priceTicket = priceTicket;
-    }
-    public Long getFreeTickectsSelled() {
-        return freeTickectsSelled;
-    }
-    public void setFreeTickectsSelled(Long freeTickectsSelled) {
-        this.freeTickectsSelled = freeTickectsSelled;
-    }
-    public Long getPayedTickectsSelled() {
-        return payedTickectsSelled;
-    }
-    public void setPayedTickectsSelled(Long payedTickectsSelled) {
-        this.payedTickectsSelled = payedTickectsSelled;
     }
     public Long getIdAdmin() {
         return idAdmin;
