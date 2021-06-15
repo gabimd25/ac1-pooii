@@ -36,8 +36,6 @@ Event
     "amountFreeTickets": 0,
     "amountPayedTickets": 30,
     "priceTicket": 10,
-    "freeTickectsSelled": null,
-    "payedTickectsSelled": null,
     "idAdmin": 1
 }
 
