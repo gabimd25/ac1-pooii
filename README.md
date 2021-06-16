@@ -8,42 +8,42 @@ Lívia Sayuri Chinem Moreno 190374
 
 Attend
 {
-        "name": "Luciano Huck",
-        "emailContact": "lucianoH@gmail.com"
+        "name": "Gilbert Blyte",
+        "emailContact": "gilbertB@gmail.com"
 }
 
 Admin
 {
-        "name": "Juliene Souza",
-        "phoneNumber": "32321011",
-        "emailContact": "juju_souza@gmail.com"
+        "name": "Gustavo Lima",
+        "phoneNumber": "323112530",
+        "emailContact": "liminha@outlook.com"
 }
 
 Place
 {
-    "name": "SorocabaFesta",
-    "address": "Avenida Dom Aguirre n 73"
+    "name": "Clube das borboletas",
+    "address": "Rua Ademir de Barros n20"
 }
 
 Event
 {
-    "name": "curso de culinária",
-    "emailContact": "lili@gmail.com",
-    "description": "culinária francesa",
-    "startDate": "2021-06-20",
-    "endDate": "2021-06-25",
-    "startTime": "10:00:00",
-    "endTime": "11:00:00",
-    "amountFreeTickets": 0,
-    "amountPayedTickets": 30,
-    "priceTicket": 10,
+    "name": "Teatro Musical",
+    "emailContact": "musicaly@gmail.com",
+    "description": "arte é expressão da vida, apresentação de uma peça inédita",
+    "startDate": "2021-12-26",
+    "endDate": "2021-12-27",
+    "startTime": "20:00:00",
+    "endTime": "23:00:00",
+    "amountFreeTickets": 10,
+    "amountPayedTickets": 50,
+    "priceTicket": 50,
     "idAdmin": 1
 }
 
 Ticket
 {
-    "idAttend": 6,
-    "type": "PAYED"
+    "idAttend": 7,
+    "type": "FREE"
 }
 
 
